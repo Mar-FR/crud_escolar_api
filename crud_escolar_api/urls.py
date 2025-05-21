@@ -21,6 +21,7 @@ from crud_escolar_api.views import alumnos
 from crud_escolar_api.views import maestros
 from crud_escolar_api.views import eventos
 from crud_escolar_api.views import auth
+from crud_escolar_api.views.users import UsuariosResponsablesView
 
 urlpatterns = [
     #Version
@@ -63,4 +64,8 @@ urlpatterns = [
 
     # Editar eventos
         path('eventos-edit/', eventos.EventosViewEdit.as_view()),
+
+    #Obtener responsables
+        path('responsables/', UsuariosResponsablesView.as_view(), name='responsables'),
+
 ]

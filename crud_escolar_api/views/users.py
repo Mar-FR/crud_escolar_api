@@ -119,7 +119,7 @@ class AdminsViewEdit(generics.CreateAPIView):
         lista_alumnos = AlumnoSerializer(alumnos, many=True).data
         total_alumnos = len(lista_alumnos)
 
-        return Response({'admins': total_admins, 'maestros': total_maestros, 'alumnos:':total_alumnos }, 200)
+        return Response({'admins': total_admins, 'maestros': total_maestros, 'alumnos':total_alumnos }, 200)
     
     #Editar administrador
     def put(self, request, *args, **kwargs):
@@ -147,3 +147,24 @@ class AdminsViewEdit(generics.CreateAPIView):
             return Response({"details":"Administrador eliminado"},200)
         except Exception as e:
             return Response({"details":"Algo pasó al eliminar"},400)
+
+class UsuariosResponsablesView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        # Obtener administradores
+        admins = Administradores.objects.filter(user__is_active=1).order_by("id")
+        lista_admins = AdminSerializer(admins, many=True).data
+        for admin in lista_admins:
+            admin["rol"] = "administrador"  # Añadir campo 'rol' para distinguirlos
+
+        # Obtener maestros
+        maestros = Maestros.objects.filter(user__is_active=1).order_by("id")
+        lista_maestros = MaestroSerializer(maestros, many=True).data
+        for maestro in lista_maestros:
+            maestro["rol"] = "maestro"
+            maestro["materias_json"] = json.loads(maestro["materias_json"]) if maestro["materias_json"] else []
+
+        # Combinar ambas listas
+        usuarios = lista_admins + lista_maestros
+        return Response(usuarios, 200)

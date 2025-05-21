@@ -65,7 +65,7 @@ class EventosView(generics.CreateAPIView):
                                             lugar = request.data["lugar"],
                                             publico = json.dumps(request.data["publico"]),
                                             programa = request.data["programa"],
-                                            responsable =request.data["responsable"],
+                                            responsable =request.data["responsable_id"],
                                             descripcion = request.data["descripcion"],
                                             cupo_max = request.data["cupo_max"])
             evento.save()
@@ -85,7 +85,7 @@ class EventosViewEdit(generics.CreateAPIView):
         evento.lugar = request.data["lugar"]
         evento.publico = json.dumps(request.data["publico"])
         evento.programa = request.data["programa"]
-        evento.responsable =request.data["responsable"]
+        evento.responsable =request.data["responsable_id"]
         evento.descripcion = request.data["descripcion"]
         evento.cupo_max = request.data["cupo_max"]
         evento.save()
